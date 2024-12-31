@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "sr-t"
+version = "0.1.0"
+description = "Generate  and translate subtitles"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+ctranslate2 = "=4.4.0"
+srt3 = "^1.0.1"
+faster-whisper = "^1.1.0"
+ffmpeg-python = "^0.2.0"
+transformers = "^4.47.1"
+torch = "^2.5.1"
+sentencepiece = "^0.2.0"
+sacremoses = "^0.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
