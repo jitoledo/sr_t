@@ -1,6 +1,4 @@
 ![logo](logo.png)  
-# Sr-T
-
 # Sr_T - Subtitle Generation and Translation Tool
 
 `sr_t` is a CLI tool for transcribing audio, and translating subtitles. It uses Whisper for transcription and supports translation models like Helsinki and NLLB.
