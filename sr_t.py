@@ -63,7 +63,6 @@ def main():
         # Transcribe video to subtitles
         print("Initializing...", end=" ")
         transcriber = Transcriber(source_language=source_lang, whisper_model_size=whisper_model)
-        print("✔")
         for input_path in files:
             print(f"Transcribing {input_path}...", end=" ")
             subtitles = transcriber.transcribe(str(input_path))
@@ -80,20 +79,12 @@ def main():
         
         print("Initializing...", end=" ")
         translator_source_lang = "en" if translation_model == "helsinki" else "eng_Latn"
-        if source_lang and source_lang == translator_source_lang:
-            transcriber = Transcriber(whisper_model_size=whisper_model, task="transcribe")
-        else:
-            transcriber = Transcriber(whisper_model_size=whisper_model, task="translate")
+        transcriber = Transcriber(whisper_model_size=whisper_model, task="translate")
         translator = Translator(source_language=translator_source_lang, target_language=target_lang, translation_model=translation_model)
-        print("✔")
         for input_path in files:
-            print(f"Transcribing {input_path}...", end=" ")
             subtitles = transcriber.transcribe(str(input_path))
             subtitles = enforce_min_duration(subtitles, min_subtitle_duration_s)
-            print("✔")
-            print(f"Translating {input_path}...", end=" ")
             translated_subtitles = translator.translate(subtitles)
-            print("✔")
             output_path = input_path.with_name(f"{input_path.stem}.{target_lang}.srt")
             write_srt(output_path, translated_subtitles)
             print(f"Transcription and translation completed: {output_path}")
@@ -107,12 +98,9 @@ def main():
 
         print("Initializing...", end=" ")
         translator = Translator(source_language=source_lang, target_language=target_lang, translation_model=translation_model)
-        print("✔")
         for input_path in files:
-            print(f"Translating {input_path}...", end=" ")
             subtitles = read_srt(input_path)
             translated_subtitles = translator.translate(subtitles)
-            print("✔")
             output_path = input_path.with_name(f"{input_path.stem}.{target_lang}.srt")
             write_srt(output_path, translated_subtitles)
             print(f"Translation completed: {output_path}")

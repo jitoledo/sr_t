@@ -4,6 +4,8 @@ from faster_whisper import WhisperModel
 from srt import Subtitle,timedelta_to_srt_timestamp
 from datetime import timedelta
 from typing import List, Optional
+from tqdm import tqdm
+from math import floor,ceil
 
 class Transcriber:
     """
@@ -56,20 +58,30 @@ class Transcriber:
         audio_data = BytesIO(process[0])
 
         # Transcribe audio
-        segments, _ = self.transcriber.transcribe(
+        segments, info = self.transcriber.transcribe(
             audio_data,
             beam_size=5,
             language=self.source_language,
             task=self.task,
             condition_on_previous_text=True,
-            log_prob_threshold=-0.5
+            log_prob_threshold=-0.5,
+            no_speech_threshold = 0.7,
         )
-        subtitle_list=[]
-        for index,segment in enumerate(segments):
-            subtitle_list.append(Subtitle(index=index,
-                                          start=timedelta(seconds=segment.start),
-                                          end=timedelta(seconds=segment.end),
-                                          content=segment.text,
-                                          )
-                                )
+        subtitle_list = []
+        segment_index = 0
+        with tqdm(total=floor(info.duration), unit=" seconds", leave = False,desc="Transcribing...") as pbar:
+            for segment in segments:
+                pbar.update(ceil(segment.end-segment.start))
+                current_sub=Subtitle(index=segment_index,
+                                    start=timedelta(seconds=segment.start),
+                                    end=timedelta(seconds=segment.end),
+                                    content=segment.text,
+                                    )
+                # If the model produces segments with repeated text,
+                # set the end_time of the previous segment instead of appending a new sub
+                if segment_index > 1 and current_sub.content == subtitle_list[-1].content: 
+                    subtitle_list[-1].end=current_sub.end
+                else:
+                    segment_index += 1
+                    subtitle_list.append(current_sub)
         return subtitle_list

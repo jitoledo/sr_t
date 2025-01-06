@@ -1,6 +1,7 @@
 from srt import Subtitle
 from transformers import pipeline
 from typing import List
+from tqdm import tqdm
 
 class Translator:
     """
@@ -43,7 +44,7 @@ class Translator:
             translations = self.translator(texts, src_lang=self.source_language, tgt_lang=self.target_language, batch_size=8)
         else:
             translations = self.translator(texts, batch_size=8)
-        for subtitle,translation in zip(subtitle_list,translations):
+        for subtitle,translation in tqdm(zip(subtitle_list,translations),leave=False,desc="Translating..."):
                 subtitle.content=translation['translation_text']
         return subtitle_list
 

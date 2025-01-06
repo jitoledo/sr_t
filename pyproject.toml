@@ -2,7 +2,7 @@
 name = "sr-t"
 version = "0.1.0"
 description = "Generate  and translate subtitles"
-authors = ["Your Name <you@example.com>"]
+authors = ["jitoledo"]
 readme = "README.md"
 package-mode = false
 
@@ -16,6 +16,7 @@ transformers = "^4.47.1"
 torch = "^2.5.1"
 sentencepiece = "^0.2.0"
 sacremoses = "^0.1.1"
+tqdm = "^4.67.1"
 
 
 [build-system]
